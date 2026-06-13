@@ -1,5 +1,5 @@
 // Sahi path for modern Mongoose (v6/v7+)
-import { FilterQuery, UpdateQuery, QueryOptions, ProjectionType } from 'mongoose';
+import { FilterQuery, UpdateQuery, QueryOptions, ProjectionType,Document,Model } from 'mongoose';
 // ============================================================
 // Generic Repository Interface
 // Defines the contract every repository must fulfil

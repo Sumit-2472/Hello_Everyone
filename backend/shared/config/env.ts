@@ -50,7 +50,10 @@ const PassportServiceSchema = BaseFields.extend({
   AWS_SECRET: z.string().min(1),
   AWS_S3_BUCKET: z.string().min(1),
 });
-
+const AuthServiceSchema = BaseFields.extend({
+  JWT_SECRET: z.string().min(32),
+  JWT_REFRESH_SECRET: z.string().min(32),
+});
 const ReturnServiceSchema = BaseFields.extend({
   GEMINI_API_KEY: z.string().min(1),
 });

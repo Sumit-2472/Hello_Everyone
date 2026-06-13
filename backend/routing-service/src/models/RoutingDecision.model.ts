@@ -146,12 +146,11 @@ const RoutingDecisionSchema = new Schema<IRoutingDecision, IRoutingDecisionModel
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform(_doc, ret) {
-        ret.id = ret._id.toString();
-        delete ret._id;
-        return ret;
-      },
-    },
+  transform(_doc, ret): any {
+    ret.id = ret._id.toString();
+    return { ...ret, _id: undefined } as any;
+  },
+}
   }
 );
 
@@ -170,10 +169,10 @@ RoutingDecisionSchema.statics.findByPassport = function (
 };
 
 // ── Static: route distribution stats ────────────────────────
-RoutingDecisionSchema.statics.getAggregatedStats = function (): Promise<
-  Record<string, unknown>
+RoutingDecisionSchema.statics.getAggregatedStats = function (this: Model<IRoutingDecision>): Promise<
+  Array<Record<string, unknown>>
 > {
-  return this.aggregate([
+return this.aggregate([
     {
       $group: {
         _id: '$route',

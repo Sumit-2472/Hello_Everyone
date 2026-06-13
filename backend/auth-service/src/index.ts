@@ -1,11 +1,21 @@
 import 'dotenv/config';
-import { validateEnv }            from '../../shared/config/env';
-import { createLogger }           from '../../shared/config/logger';
+import 'dotenv/config';
+
+console.log("PORT =", process.env.PORT);
+console.log("MONGODB_URI =", process.env.MONGODB_URI);
+
+const config = {
+  PORT: Number(process.env.PORT),
+  NODE_ENV: process.env.NODE_ENV,
+};
+
+import { validateEnv } from '../../shared/config/env';
+import { createLogger }  from '../../shared/config/logger';
 import { connectMongoDB, registerShutdownHandlers } from '../../shared/config/mongodb';
 import app from './app';
 
 // ── 1. Validate environment first — exits on misconfiguration ─
-const config = validateEnv('auth');
+
 const logger = createLogger('auth-service');
 
 // ── 2. Register SIGTERM / SIGINT / unhandledRejection handlers ─

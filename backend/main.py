@@ -18,6 +18,11 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+    fullname: str
+
 @app.post("/login")
 async def login(request: LoginRequest):
     # Mock authentication logic
@@ -25,6 +30,7 @@ async def login(request: LoginRequest):
         return {"status": "success", "message": "Login successful"}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
 @app.post("/register")
 async def register(user: RegisterRequest):
     try:
