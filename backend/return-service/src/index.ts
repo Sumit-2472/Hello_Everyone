@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { validateEnv }            from '../../shared/config/env';
 import { createLogger }           from '../../shared/config/logger';
 import { connectMongoDB, registerShutdownHandlers } from '../../shared/config/mongodb';
+import mongoose from 'mongoose';
 import app from './app';
 
 const config = validateEnv('return');
@@ -10,7 +11,7 @@ const logger = createLogger('return-service');
 registerShutdownHandlers('return-service');
 
 const start = async (): Promise<void> => {
-  await connectMongoDB('return-service');
+  await connectMongoDB('return-service', undefined, mongoose);
 
   const server = app.listen(config.PORT, () => {
     logger.info('return-service started', { port: config.PORT, env: config.NODE_ENV });

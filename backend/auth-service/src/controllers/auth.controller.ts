@@ -5,21 +5,18 @@ import { asyncHandler, AppError } from '../../../shared/middleware/errorHandler'
 import { ApiResponse } from '../../../shared/types';
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
+  console.log("DEBUG: Request received in register controller", req.body); // Check if it even reaches here
+  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("DEBUG: Validation failed", errors.array());
     throw new AppError(errors.array()[0].msg as string, 400);
   }
 
   const result = await authService.register(req.body);
+  console.log("DEBUG: Registration successful");
 
-  const response: ApiResponse = {
-    success: true,
-    data: result,
-    message: 'Registration successful',
-    timestamp: new Date().toISOString(),
-  };
-
-  res.status(201).json(response);
+  res.status(201).json({ success: true, data: result });
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {

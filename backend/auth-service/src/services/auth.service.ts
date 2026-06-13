@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { UserModel, IUser } from '../models/User.model';
 import { AppError } from '../../../shared/middleware/errorHandler';
 import { AuthTokenPayload, UserRole } from '../../../shared/types';
-
+import mongoose from 'mongoose';
 interface RegisterInput {
   email: string;
   password: string;
@@ -42,8 +42,14 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+
   // ── Register ──────────────────────────────────────────────
   async register(input: RegisterInput): Promise<AuthResult> {
+     console.log('Global readyState:', mongoose.connection.readyState);
+  console.log('Model readyState:', UserModel.db.readyState);
+  console.log('Model db:', UserModel.db.name);
+  console.log('mongodb.ts mongoose version:', mongoose.version);
+
     const existing = await UserModel.findOne({ email: input.email });
     if (existing) {
       throw new AppError('Email already registered', 409);

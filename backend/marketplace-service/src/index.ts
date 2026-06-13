@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { validateEnv }            from '../../shared/config/env';
 import { createLogger }           from '../../shared/config/logger';
 import { connectMongoDB, registerShutdownHandlers } from '../../shared/config/mongodb';
+import mongoose from 'mongoose';
 import app from './app';
 
 const config = validateEnv('marketplace');
@@ -10,7 +11,7 @@ const logger = createLogger('marketplace-service');
 registerShutdownHandlers('marketplace-service');
 
 const start = async (): Promise<void> => {
-  await connectMongoDB('marketplace-service');
+  await connectMongoDB('marketplace-service', undefined, mongoose);
 
   const server = app.listen(config.PORT, () => {
     logger.info('marketplace-service started', { port: config.PORT, env: config.NODE_ENV });

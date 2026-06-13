@@ -1,4 +1,4 @@
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose, { ConnectOptions, Mongoose } from 'mongoose';
 import { rootLogger } from './logger';
 import { externalServiceError } from './appError';
 
@@ -9,6 +9,9 @@ import { externalServiceError } from './appError';
 //   import { connectMongoDB, disconnectMongoDB } from '../../shared/config/mongodb';
 //   await connectMongoDB('auth-service');
 // ============================================================
+
+// Allow services to pass their own mongoose instance to avoid dual-instance issues
+let _mongoose: Mongoose = mongoose;
 
 // ── Retry configuration ───────────────────────────────────────
 const RETRY_CONFIG = {
@@ -49,7 +52,7 @@ const BASE_OPTIONS: ConnectOptions = {
 
 // ── Event listeners ───────────────────────────────────────────
 function attachConnectionListeners(serviceName: string): void {
-  const conn = mongoose.connection;
+  const conn = _mongoose.connection;
 
   conn.on('connected', () => {
     state.isConnected = true;
@@ -80,7 +83,7 @@ function attachConnectionListeners(serviceName: string): void {
 
   // Log slow queries in development
   if (process.env.NODE_ENV !== 'production') {
-    mongoose.set('debug', (collectionName: string, method: string, query: object) => {
+    _mongoose.set('debug', (collectionName: string, method: string, query: object) => {
       rootLogger.debug(`[${serviceName}] Mongoose: ${collectionName}.${method}`, { query });
     });
   }
@@ -105,13 +108,20 @@ function calculateDelay(attempt: number): number {
  *
  * @param serviceName - Identifies the calling service in logs.
  * @param dbName      - Override DB name (defaults to env.DB_NAME or serviceName).
+ * @param mongooseInstance - Optional mongoose instance from the calling service (avoids dual-instance issues).
  */
 export async function connectMongoDB(
   serviceName: string,
-  dbName?: string
+  dbName?: string,
+  mongooseInstance?: Mongoose
 ): Promise<void> {
+  // Use the caller's mongoose instance if provided
+  if (mongooseInstance) {
+    _mongoose = mongooseInstance;
+  }
+
   // Already connected — nothing to do
-  if (state.isConnected && mongoose.connection.readyState === 1) {
+  if (state.isConnected && _mongoose.connection.readyState === 1) {
     rootLogger.debug(`[${serviceName}] Reusing existing MongoDB connection`);
     return;
   }
@@ -140,7 +150,7 @@ export async function connectMongoDB(
         `[${serviceName}] Connecting to MongoDB (attempt ${attempt + 1}/${RETRY_CONFIG.maxRetries + 1})`
       );
 
-      await mongoose.connect(uri, {
+      await _mongoose.connect(uri, {
         ...BASE_OPTIONS,
         dbName: resolvedDbName,
       });
@@ -180,12 +190,12 @@ export async function connectMongoDB(
  * Call this in SIGTERM / SIGINT handlers.
  */
 export async function disconnectMongoDB(): Promise<void> {
-  if (!state.isConnected && mongoose.connection.readyState === 0) {
+  if (!state.isConnected && _mongoose.connection.readyState === 0) {
     return;
   }
 
   try {
-    await mongoose.connection.close();
+    await _mongoose.connection.close();
     state.isConnected = false;
     rootLogger.info(`[${state.serviceName}] MongoDB connection closed`);
   } catch (err: unknown) {
@@ -211,12 +221,12 @@ export function getMongoHealth(): MongoHealthStatus {
     3: 'disconnecting',
   };
 
-  const rs = mongoose.connection.readyState;
+  const rs = _mongoose.connection.readyState;
   return {
     status:     readyStateMap[rs] ?? 'disconnected',
     readyState: rs,
-    host:       mongoose.connection.host,
-    dbName:     mongoose.connection.name,
+    host:       _mongoose.connection.host,
+    dbName:     _mongoose.connection.name,
     retryCount: state.retryCount,
   };
 }

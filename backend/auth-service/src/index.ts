@@ -12,6 +12,8 @@ const config = {
 import { validateEnv } from '../../shared/config/env';
 import { createLogger }  from '../../shared/config/logger';
 import { connectMongoDB, registerShutdownHandlers } from '../../shared/config/mongodb';
+import { seedDefaultUser } from './seed';
+import mongoose from 'mongoose';
 import app from './app';
 
 // ── 1. Validate environment first — exits on misconfiguration ─
@@ -23,7 +25,10 @@ registerShutdownHandlers('auth-service');
 
 // ── 3. Connect to MongoDB with retry, then start HTTP server ──
 const start = async (): Promise<void> => {
-  await connectMongoDB('auth-service');
+  await connectMongoDB('auth-service', undefined, mongoose);
+
+  // Seed default user on startup
+  await seedDefaultUser();
 
   const server = app.listen(config.PORT, () => {
     logger.info('auth-service started', { port: config.PORT, env: config.NODE_ENV });

@@ -216,7 +216,7 @@ const ListingSchema = new Schema<IMarketplaceListing, IMarketplaceListingModel>(
       virtuals: true,
       transform(_doc, ret) {
         ret.id = ret._id.toString();
-        delete ret._id;
+        // delete
         return ret;
       },
     },
