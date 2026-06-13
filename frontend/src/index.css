@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-relife-gray text-relife-navy antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-relife-orange hover:bg-relife-orange-dark text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-relife-orange focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-relife-navy hover:bg-relife-navy-light text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-green {
+    @apply bg-relife-green hover:bg-relife-green-dark text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6;
+  }
+
+  .badge-verified {
+    @apply inline-flex items-center gap-1 bg-relife-green-light text-relife-green text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  .health-score-excellent {
+    @apply text-green-600 bg-green-50;
+  }
+
+  .health-score-good {
+    @apply text-blue-600 bg-blue-50;
+  }
+
+  .health-score-fair {
+    @apply text-yellow-600 bg-yellow-50;
+  }
+
+  .health-score-poor {
+    @apply text-red-600 bg-red-50;
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "types": ["node"],
+
+    // ── Strict mode ────────────────────────────────────────────
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // ── Module resolution ──────────────────────────────────────
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    // ── Emit ───────────────────────────────────────────────────
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "..",
+
+    // ── Project references ─────────────────────────────────────
+    // Required so services can reference this package as a TS project
+    "composite": true
+  },
+  "include": [
+    "config/**/*",
+    "middleware/**/*",
+    "repositories/**/*",
+    "server/**/*",
+    "types/**/*",
+    "declaration.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

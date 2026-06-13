@@ -1,0 +1,38 @@
+{
+  "name": "amazon-relife",
+  "version": "1.0.0",
+  "description": "AI-Powered Circular Commerce Ecosystem",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend/shared",
+    "backend/auth-service",
+    "backend/return-service",
+    "backend/passport-service",
+    "backend/routing-service",
+    "backend/marketplace-service"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:auth": "npm run dev --workspace=backend/auth-service",
+    "dev:return": "npm run dev --workspace=backend/return-service",
+    "dev:passport": "npm run dev --workspace=backend/passport-service",
+    "dev:routing": "npm run dev --workspace=backend/routing-service",
+    "dev:marketplace": "npm run dev --workspace=backend/marketplace-service",
+    "dev:backend": "concurrently \"npm run dev:auth\" \"npm run dev:return\" \"npm run dev:passport\" \"npm run dev:routing\" \"npm run dev:marketplace\"",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces --if-present",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "mongoose": "^9.7.0"
+  }
+}

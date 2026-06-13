@@ -1,0 +1,22 @@
+{
+  // ============================================================
+  // Amazon ReLife — Backend Root TypeScript Configuration
+  //
+  // This file is NOT used to compile code directly.
+  // Its purpose is to give the VS Code TypeScript language server
+  // a single entry point that covers every package so Go-to-
+  // Definition, auto-import, and IntelliSense work across the
+  // entire backend (including backend/shared).
+  //
+  // Individual services compile using their own tsconfig.json.
+  // ============================================================
+  "files": [],
+  "references": [
+    { "path": "./shared" },
+    { "path": "./auth-service" },
+    { "path": "./return-service" },
+    { "path": "./passport-service" },
+    { "path": "./routing-service" },
+    { "path": "./marketplace-service" }
+  ]
+}

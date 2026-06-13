@@ -1,0 +1,18 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["./backend/shared/*"]
+    }
+  },
+  "references": [
+    { "path": "./frontend" }, // <--- Yeh add karo
+    { "path": "./backend/shared" },
+    { "path": "./backend/auth-service" },
+    { "path": "./backend/return-service" },
+    { "path": "./backend/passport-service" },
+    { "path": "./backend/routing-service" },
+    { "path": "./backend/marketplace-service" }
+  ]
+}
